@@ -8,7 +8,7 @@ To run this project on your own environment simply clone this repo and follow th
 
 To get started, you will first need to signup for a free account on Aiven.io.  Once your account is created, setup a Kafka and a Postgres service.  
 
-####Kafka Service
+#### Kafka Service
 
 For directions on setting up the Kafka service, follow their getting started documentation https://help.aiven.io/en/articles/489572-getting-started-with-aiven-kafka.  Just follow the directions upto getting your Kafka service up and running.  You will use the code in this repo produce and consume data to/from Kafka.
 
@@ -16,7 +16,7 @@ For directions on setting up the Kafka service, follow their getting started doc
 
 We will setup the Postgres service next.  To get the Postgres service up and running, follow the Aiven's directions listed here https://help.aiven.io/en/articles/489573-getting-started-with-aiven-postgresql.  Here again will will just follow the direction up to the point that the service si up and running.  
 
-####Credentials file
+#### Credentials file
 
 After both of those services are up and running, the next step is to create a file to hold all your credentials.  This file should be stored outside of this repo to avoid accidently uploading your credentials to github.  The file should look something like this:
 
@@ -62,7 +62,7 @@ $ ./producer.py -f ../aiven.config -t trump
 
 Both of those commands will run until you manually stop them.  The -f flag specifies the path to the credentials file described above.  The -t flag has two purposes, it will serve as the keyword to track on Twitter as well as the topic to post the messages to.  
 
-####Running the consumer
+#### Running the consumer
 
 The consumer will read the data from the specified topic and insert it into your Postgres database that you setup above.  
 
