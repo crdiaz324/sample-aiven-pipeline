@@ -1,26 +1,29 @@
 # sample-aiven-pipeline
 
-This project is a sample data pipline built on the Aiven.io infrastructure. This pipeline will follow a twitter topic (mention), determine the sentiment of the tweet and stream that data into a Kafka topic.  Then a consumer will read from that topic and push the data to a Postgres backend.  The infrastructure for both Kafka and Postgres were created with a with a few clicks on the Aiven.io Console.  
+This project is a sample data pipeline built on the Aiven.io infrastructure. This pipeline will follow a twitter topic (mention), determine the sentiment of the tweet and stream that data into a Kafka topic.  Then a consumer will read from that topic and push the data to a Postgres backend.  The infrastructure for both Kafka and Postgres were created with a with a few clicks on the Aiven.io Console.  
 
 To run this project on your own environment simply clone this repo and follow the directions in the sections below.
 
 ## Setup
 
-To get started, you will first need to signup for a free account on Aiven.io.  Once your account is created, setup a Kafka and a Postgres service.  
+To get started, you will first need to sign up for a free account on Aiven.io.  Once your account is created, setup a Kafka and a Postgres service.  
 
 #### Kafka Service
 
-For directions on setting up the Kafka service, follow their getting started documentation https://help.aiven.io/en/articles/489572-getting-started-with-aiven-kafka.  Just follow the directions upto getting your Kafka service up and running.  You will use the code in this repo produce and consume data to/from Kafka.
+For directions on setting up the Kafka service, follow their getting started documentation https://help.aiven.io/en/articles/489572-getting-started-with-aiven-kafka.  Just follow the directions up to the point of getting your Kafka service up and running.  You will use the code in this repo produce and consume data to/from Kafka.
 
-#### Postgres Sercvie
+#### Postgres Service
 
-We will setup the Postgres service next.  To get the Postgres service up and running, follow the Aiven's directions listed here https://help.aiven.io/en/articles/489573-getting-started-with-aiven-postgresql.  Here again will will just follow the direction up to the point that the service si up and running.  
+We will setup the Postgres service next.  To get the Postgres service up and running, follow the Aiven's directions listed here https://help.aiven.io/en/articles/489573-getting-started-with-aiven-postgresql.  Here again we will just follow the direction up to the point that the service is up and running.  
+
+After the service is running, we can run the create_schema.sql file to create the database and table.
 
 #### Credentials file
 
 After both of those services are up and running, the next step is to create a file to hold all your credentials.  This file should be stored outside of this repo to avoid accidently uploading your credentials to github.  The file should look something like this:
 
-```bootstrap.servers=kafka-12114903-crdiaz324-5bf5.aivencloud.com:23003
+```
+bootstrap.servers=kafka-12114903-crdiaz324-5bf5.aivencloud.com:23003
 security.protocol=SASL_SSL
 sasl.mechanisms=PLAIN
 sasl.username=<<Kafka user>>
@@ -33,13 +36,13 @@ access_token_secret=<<Twitter access toekn>>
 pg_uri=<<Postgres Service URI>>
 ```
 
-Except for the Twitter settings, all of the settings above can be found in the Aiven console after setting up the servcie.  For the Twitter setting, you will have to create an app here  https://developer.twitter.com/en/apps. After the app is created, copy your keys into this file.  
+Everything except for the Twitter settings, can be found on the Aiven console.  For the Twitter settings, you will have to create an app here  https://developer.twitter.com/en/apps. After the app is created, copy your keys into this file.  
 
-#### Activate your virtualenv and install all all requirements
+#### Activate your virtualenv and install all requirements
 
-This code was tested with Python 3.6.8, for best results, it is recommneded to create a virtualenv with the same Python version and install all the python modules there.  
+This code was tested with Python 3.6.8, for best results, it is recommended to create a virtualenv with the same Python version and install all the python modules there.  
 
-In myenvironment, I run the following commands to activate the vritualenv and install all my requirements
+In my environment, I run the following commands to activate the vritualenv and install all my requirements
 
 ```
 $ virtualenv -p ~/.asdf/installs/python/3.6.8/bin/python aiven-venv
@@ -47,11 +50,12 @@ $ source aiven-venv/bin/activate
 $ pip install -r requirements.txt
 ```
 
-That's it!  Now we just need to create a topic on Kafka that matches the keyword or mention that you want to track on Twitter and run the application to capture all tweets related to your keyword, determine the sentiment of the tweet and store it all in Postgres.
+That's it!  Now we just need to create a topic on Kafka that matches the keyword or mention that you want to track on Twitter and run the application to capture all tweets related to your keyword, determine the sentiment of the tweet and store the results in Postgres.
+
 
 #### Running the producer
 
-To run the producer, you will need to chose a keyword.  In my case, since we are so close the the presedential election, I chose two keywords, "trump" and "biden."  I then created both of those topics on the Aiven console's Kafka topic tab.  
+To run the producer, choose a keyword, in my case I chose two keywords, "trump" and "biden."  Since we are so close to the presidential elections, both of those keywords have a lot of activity so it’s easy to get some quick results.  I then created both of those topics on the Aiven console's Kafka topic tab.  
 
 Next, I simply ran the following commands from within the repo:
 
@@ -75,10 +79,22 @@ $ ./consumer.py -f ../aiven.config -t trump
 
 #### End result
 
-After running these jobs for about 15 minutes each, we can get a general idea of the overall sentiment for both candidates based on the tweets over that time.  Here is an example
+After running these jobs for about 15 minutes each, we can get a general idea of the overall sentiment for both candidates based on the tweets over that time period.  Here is an example of the output that was captured during my test run:
 
+```
+twitter_sentiment=> select topic, count(*) from tweets_by_topic group by topic;
+ topic | count
+-------+-------
+ biden |  2160
+ trump |  2039
+(2 rows)
 
+twitter_sentiment=> SELECT topic, AVG(sentiment) from tweets_by_topic group by topic;
+ topic |         avg
+-------+----------------------
+ biden | -0.02276384223131808
+ trump | -0.06734404055123176
+(2 rows)
 
-
-
- 
+twitter_sentiment=>
+```
