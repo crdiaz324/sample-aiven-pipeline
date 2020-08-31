@@ -23,7 +23,7 @@ After the service is running, we can run the create_schema.sql file to create th
 After both of those services are up and running, the next step is to create a file to hold all your credentials.  This file should be stored outside of this repo to avoid accidently uploading your credentials to github.  The file should look something like this:
 
 ```
-bootstrap.servers=***REMOVED***
+bootstrap.servers=<<Kafka service URI>>
 security.protocol=SASL_SSL
 sasl.mechanisms=PLAIN
 sasl.username=<<Kafka user>>
