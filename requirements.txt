@@ -1,0 +1,7 @@
+kafka-python>=2.0.1
+tweepy
+pandas
+vaderSentiment
+unidecode
+psycopg2
+testing.postgresql
