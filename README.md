@@ -1,6 +1,6 @@
 # sample-aiven-pipeline
 
-This project is a sample data pipeline built on the Aiven.io infrastructure. This pipeline will follow a twitter topic (mention), determine the sentiment of the tweet and stream that data into a Kafka topic.  Then a consumer will read from that topic and push the data to a Postgres backend.  The infrastructure for both Kafka and Postgres were created with a with a few clicks on the Aiven.io Console.  
+This project is a sample data pipeline built on the Aiven.io infrastructure. This pipeline will follow a twitter topic (mention), determine the sentiment of the tweet and stream that data into a Kafka topic.  Then a consumer will read from that topic and push the data to a Postgres backend.  The infrastructure for both Kafka and Postgres were created with a few clicks on the Aiven.io Console.  
 
 To run this project on your own environment simply clone this repo and follow the directions in the sections below.
 
