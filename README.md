@@ -4,7 +4,7 @@ This project is a sample data pipeline built on the Aiven.io infrastructure. Thi
 
 To run this project on your own environment simply clone this repo and follow the directions in the sections below.
 
-## Setup
+### Setup
 
 To get started, you will first need to sign up for a free account on Aiven.io.  Once your account is created, setup a Kafka and a Postgres service.  
 
@@ -53,7 +53,7 @@ $ pip install -r requirements.txt
 That's it!  Now we just need to create a topic on Kafka that matches the keyword or mention that you want to track on Twitter and run the application to capture all tweets related to your keyword, determine the sentiment of the tweet and store the results in Postgres.
 
 
-#### Running the producer
+### Running the producer
 
 To run the producer, choose a keyword, in my case I chose two keywords, "trump" and "biden."  Since we are so close to the presidential elections, both of those keywords have a lot of activity so it’s easy to get some quick results.  I then created both of those topics on the Aiven console's Kafka topic tab.  
 
@@ -66,7 +66,7 @@ $ ./producer.py -f ../aiven.config -t trump
 
 Both of those commands will run until you manually stop them.  The -f flag specifies the path to the credentials file described above.  The -t flag has two purposes, it will serve as the keyword to track on Twitter as well as the topic to post the messages to.  
 
-#### Running the consumer
+### Running the consumer
 
 The consumer will read the data from the specified topic and insert it into your Postgres database that you setup above.  
 
@@ -77,7 +77,7 @@ $ ./consumer.py -f ../aiven.config -t biden
 $ ./consumer.py -f ../aiven.config -t trump
 ```
 
-#### End result
+### End result
 
 After running these jobs for about 15 minutes each, we can get a general idea of the overall sentiment for both candidates based on the tweets over that time period.  Here is an example of the output that was captured during my test run:
 
